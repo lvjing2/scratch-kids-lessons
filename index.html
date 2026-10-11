@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scratch 儿童编程课件</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: #2d3748; background: linear-gradient(135deg, #e8f4ff, #f3ecff, #fff4e6); min-height: 100vh; line-height: 1.7; }
+    main { max-width: 1050px; margin: auto; padding: 70px 24px; }
+    .tag { color: #6854a4; font-weight: 700; }
+    h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.3; }
+    .intro { color: #607080; font-size: 19px; max-width: 700px; }
+    .courses { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 36px 0; }
+    article { background: white; border-radius: 22px; padding: 30px; box-shadow: 0 10px 30px rgba(70,110,170,.12); border-top: 6px solid #4a90e2; }
+    article:nth-child(2) { border-color: #9b6ce0; }
+    .icon { font-size: 44px; }
+    h2 { font-size: 25px; }
+    article p { color: #607080; }
+    .open { display: inline-block; background: #4a90e2; color: white; padding: 10px 22px; border-radius: 12px; text-decoration: none; font-weight: 700; }
+    article:nth-child(2) .open { background: #8960c7; }
+    a:focus-visible { outline: 3px solid #ff9f43; outline-offset: 5px; }
+    footer { color: #607080; font-size: 14px; }
+    footer a { color: #6854a4; }
+    @media (max-width: 680px) { main { padding-top: 35px; } .courses { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="tag">9–10 岁 · 游戏编程 · 启发式课堂</div>
+    <h1>Scratch 儿童编程课件</h1>
+    <p class="intro">先当玩家，再当设计师。把游戏拆成小任务，在观察、尝试和调试中搭建自己的 Scratch 作品。</p>
+    <div class="courses">
+      <article>
+        <div class="icon" aria-hidden="true">🦸</div>
+        <div class="tag">项目 01</div>
+        <h2>是英雄就下一百层</h2>
+        <p>观察下落与滚动，探索重力、碰撞、克隆、随机位置和计分。</p>
+        <p>内置试玩 · 六个动手任务 · 教师提示</p>
+        <a class="open" href="是英雄就下一百层-课件.html">打开下一百层课件 →</a>
+      </article>
+      <article>
+        <div class="icon" aria-hidden="true">🚀</div>
+        <div class="tag">项目 02</div>
+        <h2>太空保卫战</h2>
+        <p>让飞船发射激光，拦截陨石，再用广播与血量机制挑战 Boss。</p>
+        <p>29 页 · 4 次基础课＋1 次选修 · 双模式试玩</p>
+        <a class="open" href="太空保卫战-课件.html">打开太空保卫战课件 →</a>
+      </article>
+    </div>
+    <footer>课件可离线使用。左右键翻页，N 教师提示，T 目录，F 全屏；试玩时用底部按钮翻页。<br>使用说明见 <a href="README.md">README</a> · 开源许可：<a href="LICENSE">MIT</a></footer>
+  </main>
+</body>
+</html>

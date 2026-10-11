@@ -1,0 +1,437 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>太空保卫战 · Scratch 启发式课件</title><style>
+  :root{
+    --blue:#4A90E2; --blue2:#6FB1F7; --orange:#FF9F43; --orange2:#FFB870;
+    --green:#2ECC71; --green2:#58D68D; --pink:#E56497; --purple:#9B6CE0;
+    --yellow:#F7C948; --red:#EE5253; --teal:#0FB9B0; --teal2:#5FD3CC;
+    --gold:#BD7B15; --violet:#6854A4;
+    --ink:#2D3748; --soft:#F4F7FB; --line:#E3E9F2;
+    --shadow:0 10px 30px rgba(70,110,170,.16); --shadow2:0 6px 18px rgba(70,110,170,.12);
+    --codebg:#1e2935;
+    --sc-motion:#4C97FF; --sc-looks:#9966FF; --sc-sound:#CF63CF; --sc-event:#FFBF00;
+    --sc-control:#FFAB19; --sc-sensing:#5CB1D6; --sc-op:#59C059; --sc-var:#FF8C1A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html,body{height:100%}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background:linear-gradient(135deg,#e8f4ff 0%,#f3ecff 40%,#fff4e6 100%);
+    color:var(--ink);overflow:hidden;line-height:1.6;
+  }
+  .deck{position:fixed;inset:0}
+  .slide{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;
+    padding:46px 56px 74px;opacity:0;visibility:hidden;transform:translateX(40px);
+    transition:opacity .45s ease, transform .45s ease, visibility .45s;overflow:auto;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:translateX(0)}
+  .slide.prev{transform:translateX(-40px)}
+  .progress{position:fixed;top:0;left:0;height:6px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--orange));width:0;z-index:50;transition:width .35s}
+  .counter{position:fixed;bottom:18px;right:24px;font-size:14px;color:#8395a7;background:rgba(255,255,255,.75);padding:4px 14px;border-radius:20px;z-index:50;backdrop-filter:blur(6px)}
+  .nav{position:fixed;bottom:18px;left:24px;display:flex;gap:8px;z-index:50}
+  .nav button{border:none;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--blue);font-size:17px;cursor:pointer;box-shadow:var(--shadow2);transition:.2s}
+  .nav button.wide{width:auto;padding:0 16px;font-size:13px;font-weight:700}
+  .nav button:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+
+  .chip{display:inline-block;padding:9px 22px;border-radius:999px;font-size:19px;font-weight:700;color:#fff}
+  .chip.blue{background:var(--blue)}.chip.orange{background:var(--orange)}.chip.green{background:var(--green)}
+  .chip.purple{background:var(--purple)}.chip.pink{background:var(--pink)}.chip.yellow{background:var(--yellow);color:#7a5a00}
+  .chip.red{background:var(--red)}.chip.teal{background:var(--teal)}.chip.gold{background:var(--gold)}.chip.violet{background:var(--violet)}
+  .chapter{display:inline-flex;align-items:center;gap:12px;padding:9px 24px;border-radius:999px;font-size:18px;font-weight:800;color:var(--violet);background:rgba(104,84,164,.10);border:2px solid rgba(104,84,164,.28)}
+  .chapter .cn{background:var(--violet);color:#fff;border-radius:999px;padding:2px 13px;font-size:15px}
+
+  h1.title{font-size:58px;line-height:1.26;margin-bottom:10px}
+  h2.section{font-size:44px;margin-bottom:8px;text-align:center}
+  .sub{font-size:23px;color:#607080;margin-bottom:24px;text-align:center;max-width:1400px}
+  .center{text-align:center}
+  .card{background:#fff;border-radius:22px;padding:26px 32px;box-shadow:var(--shadow);border:2px solid var(--line);text-align:left}
+  .card h3{font-size:21px;margin-bottom:8px;color:var(--ink)}
+  .card p{font-size:18px;color:#6a7a90;line-height:1.58}
+  .grid{display:grid;gap:20px;width:100%;max-width:1400px}
+  .grid.two{grid-template-columns:repeat(2,1fr)}.grid.three{grid-template-columns:repeat(3,1fr)}.grid.four{grid-template-columns:repeat(4,1fr)}
+
+  .pill{background:#eef4ff;border:2px dashed var(--blue2);border-radius:18px;padding:20px 26px;font-size:20px;text-align:left}
+  .pill.note{border-style:solid;border-color:var(--green2);background:#eafaf0;color:#1a5a30}
+  .pill.warn{border-style:solid;border-color:var(--red);background:#fff0f0;color:#7a2a28}
+  .pill.ask{border-left:8px solid var(--orange);border-radius:14px;background:#fff;font-size:26px;font-weight:800;color:var(--ink);box-shadow:var(--shadow2)}
+  .pill.key{border-style:solid;border-color:var(--gold);background:#fff7e8;color:#5a4210}
+  .hl{color:var(--blue);font-weight:800}.hl.o{color:var(--orange)}.hl.g{color:var(--green)}.hl.p{color:var(--purple)}.hl.r{color:var(--red)}.hl.t{color:var(--teal)}
+  .small{font-size:15px;color:#90a0b0}
+
+  .cover{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:20px}
+  .cover .badges{font-size:66px;letter-spacing:10px}
+  .cover h1{font-size:74px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--orange));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cover .tag{font-size:26px;color:#5a6a80}
+
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;width:100%;max-width:1400px;align-items:stretch}
+  .flow .fs{min-height:150px;padding:24px 18px;display:flex;flex-direction:column;justify-content:center;text-align:center;background:#fff;border-radius:18px;border:2px solid var(--line);box-shadow:var(--shadow2);position:relative}
+  .flow .fs strong{color:var(--ink);font-size:22px}
+  .flow .fs span{margin-top:9px;color:#6a7a90;font-size:16px;line-height:1.55;text-align:center}
+  .flow .fs .tag{display:block;font-size:14px;font-weight:800;color:var(--blue);margin-bottom:5px}
+  .flow .fs:nth-child(odd){border-color:var(--blue2);background:#eef4ff}
+  .flow .fs:nth-child(even){border-color:var(--green2);background:#eafaf0}
+  .flow .fs:not(:last-child)::after{content:"→";position:absolute;right:-22px;top:50%;transform:translateY(-50%);color:var(--ink);font-size:30px;font-weight:900;z-index:3;opacity:.35}
+
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:100%;max-width:1380px;align-items:stretch}
+  .vs .side{border-radius:22px;padding:30px;box-shadow:var(--shadow2);border:2px solid var(--line);text-align:left}
+  .vs .side.l{background:#eef4ff;border-color:var(--blue2)}.vs .side.r{background:#fff4e6;border-color:var(--orange2)}
+  .vs h3{font-size:26px;margin-bottom:12px}
+  .vs ul{list-style:none;padding:0;margin:0}
+  .vs li{padding:9px 0 9px 22px;font-size:19px;color:#3a4a60;position:relative;border-bottom:1px dashed var(--line)}
+  .vs li:last-child{border-bottom:none}
+  .vs li::before{content:"•";font-weight:900;position:absolute;left:0;color:var(--blue)}
+
+  table.cmp{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow2);font-size:19px;text-align:left}
+  table.cmp th,table.cmp td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--line)}
+  table.cmp th{background:var(--blue);color:#fff;font-size:16px}
+  table.cmp td:first-child{font-weight:700;color:#3a4a60;background:#f7faff}
+  table.cmp tr:last-child td{border-bottom:none}
+  table.cmp .ab{background:#fff4e6;color:#b86200}
+  table.cmp .ba{background:#e9faf8;color:#0a7a70}
+
+  /* ===== Scratch 积木 ===== */
+  .sbpanel{background:#fbfaf7;border:2px solid var(--line);border-radius:16px;padding:20px 24px;box-shadow:var(--shadow2);text-align:left;max-width:760px;width:100%;display:inline-block;font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+  .sbpanel .title{font-size:14px;color:#8a9aaa;margin-bottom:10px;font-weight:700}
+  .blk{display:inline-flex;align-items:center;gap:5px;border-radius:9px;padding:6px 14px;margin:3px 0;font-size:16.5px;font-weight:600;color:#fff;line-height:1.55;white-space:nowrap;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .blk.hat{border-radius:16px 16px 9px 9px}
+  .blk.motion{background:var(--sc-motion)} .blk.looks{background:var(--sc-looks)} .blk.sound{background:var(--sc-sound)}
+  .blk.evt{background:var(--sc-event);color:#4a3300} .blk.ctrl{background:var(--sc-control);color:#4a3300}
+  .blk.sens{background:var(--sc-sensing)} .blk.opc{background:var(--sc-op)} .blk.var{background:var(--sc-var)}
+  .blk .slot{background:#fff;color:#333;border-radius:8px;padding:1px 10px;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);font-weight:600}
+  .blk .slot.op{background:#eaf8ea;border:1px solid #b6d7b6}
+  .blk .slot.sens{background:#eef7fb;border:1px solid #b9dce8}
+  .blk .num{background:#fff;color:#333;border-radius:999px;padding:1px 9px;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);font-weight:700}
+  .ctrl{display:inline-grid;margin:2px 0}
+  .ctrl > .head{background:var(--sc-control);color:#4a3300;border-radius:9px 9px 0 0;padding:6px 16px;font-size:16.5px;font-weight:600;line-height:1.55;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .ctrl > .body{border-left:5px solid var(--sc-control);margin-left:10px;padding:5px 0 3px 12px;border-radius:0 0 0 12px}
+  .ctrl > .cap{height:11px;background:var(--sc-control);border-radius:0 0 10px 10px;margin-left:10px;box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  .cm{color:#9aa6b8;font-size:14px;margin:2px 0 2px 6px}
+  .sb-sep{display:block;height:2px;background:var(--line);margin:16px 0;border-radius:2px}
+
+  details.hint{flex-shrink:0;border:2px solid var(--orange2);border-radius:16px;margin:16px auto;background:#fffaf1;box-shadow:var(--shadow2);max-width:860px;width:100%;text-align:left;overflow:hidden}
+  details.hint summary{cursor:pointer;padding:14px 22px;font-size:20px;font-weight:800;color:#b86200;background:#fff0da;user-select:none}
+  details.hint summary:hover{background:#ffe6c2}
+  details.hint[open] summary{border-bottom:2px dashed var(--orange2)}
+  details.hint .inside{padding:16px 22px}
+
+  .figure{background:#fff;border:2px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:380px}
+  .visual{display:grid;grid-template-columns:1.32fr 1fr;gap:26px;width:100%;max-width:1400px;align-items:stretch}
+  .visual .stack{display:grid;gap:15px;align-content:start}
+  .visual .stack .card{box-shadow:var(--shadow2);padding:18px 22px;border-radius:16px}
+  .visual .stack .card h3{font-size:19px;margin-bottom:5px}
+  .visual .stack .card p{font-size:16px;line-height:1.55}
+
+  .checklist{list-style:none;padding:0;margin:0;width:100%;max-width:980px}
+  .checklist li{margin:10px 0;padding:14px 20px 14px 54px;position:relative;background:#fff;border:2px solid var(--line);border-radius:14px;font-size:20px;color:var(--ink);text-align:left;box-shadow:var(--shadow2)}
+  .checklist li::before{content:"☐";position:absolute;left:18px;color:var(--orange);font-size:26px;line-height:1.4}
+
+  .demo{position:relative;background:var(--codebg);border-radius:18px;overflow:hidden;margin:0 auto;box-shadow:var(--shadow);text-align:center;max-width:440px;width:100%}
+  .demo canvas{display:block;margin:0 auto}
+  .demo .bar{position:absolute;top:0;left:0;right:0;padding:8px 14px;background:rgba(0,0,0,.35);color:#fff;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+  .demo .bar button{cursor:pointer;border:none;background:var(--orange);color:#fff;font-weight:700;border-radius:8px;padding:5px 14px;font-size:13px}
+  .demo .hint{position:absolute;bottom:0;left:0;right:0;padding:7px;color:#cfd3dc;font-size:12px;background:rgba(0,0,0,.3)}
+
+  .foot{margin-top:14px;font-size:16px;color:#9aa6b8;text-align:center}
+  .three-lines{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;width:100%;max-width:1400px}
+  .three-lines .card{border-top:5px solid var(--teal)}
+
+  .fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .7s forwards}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+  .active .fade-up{animation:fadeUp .7s forwards}
+  .active .d1{animation-delay:.1s}.active .d2{animation-delay:.25s}.active .d3{animation-delay:.4s}.active .d4{animation-delay:.55s}.active .d5{animation-delay:.7s}.active .d6{animation-delay:.85s}
+
+  .overlay{position:fixed;z-index:70;background:#fff;border:2px solid var(--line);border-radius:14px;box-shadow:0 15px 60px rgba(0,0,0,.22);padding:18px 20px;color:var(--ink)}
+  #notes{left:20px;right:20px;bottom:70px;min-height:120px;max-height:32vh;overflow:auto;background:#fff8ec;border-color:#f3d9a8}
+  #notes .nt{font-size:14px;line-height:1.7;color:#5a4a30}
+  #notes .nt b{color:var(--gold)}
+  #overview{right:20px;bottom:70px;max-height:56vh;overflow:auto;min-width:300px;max-width:520px}
+  #overview button{display:block;width:100%;text-align:left;background:#fff;border:none;border-bottom:1px dashed var(--line);padding:9px 6px;font-size:14px;cursor:pointer;color:var(--ink)}
+  #overview button:hover{color:var(--blue);font-weight:700}
+  #overview button small{display:block;color:var(--purple);font-size:11px}
+  #copyDialog{position:fixed;z-index:80;inset:15% 12%;padding:22px;background:#fff;border:2px solid var(--purple);border-radius:14px;box-shadow:0 20px 80px rgba(0,0,0,.3)}
+  #copyDialog h3{font-size:16px;margin-bottom:10px;color:var(--ink)}
+  #copyDialog textarea{width:100%;height:58vh;font-size:13px;padding:12px;font-family:"SF Mono",Menlo,monospace;border:1px solid var(--line);border-radius:8px;color:var(--ink)}
+  #copyDialog button{margin-top:10px;font:inherit;font-size:13.5px;padding:7px 16px;border:none;border-radius:8px;background:var(--purple);color:#fff;cursor:pointer}
+  #toast{position:fixed;z-index:90;bottom:70px;left:50%;transform:translateX(-50%);background:#1a5a30;color:#fff;border-radius:9px;padding:10px 20px;font-size:14px;box-shadow:var(--shadow)}
+
+  @media (max-width:1300px){
+    .slide{padding:28px 16px 66px;justify-content:flex-start}
+    h2.section{font-size:24px}.cover h1{font-size:36px}h1.title{font-size:30px}
+    .grid.two,.grid.three,.grid.four,.flow,.visual,.three-lines{grid-template-columns:1fr}
+    .vs{grid-template-columns:1fr}
+    .flow .fs:not(:last-child)::after{display:none}
+  }
+
+@media(min-width:1000px){.grid.two{grid-template-columns:repeat(2,1fr)}.grid.three{grid-template-columns:repeat(3,1fr)}}
+.code{white-space:pre-wrap;font:16px/1.85 "PingFang SC",sans-serif;color:#37465c;background:#f7f9fc;padding:18px;border-radius:12px;border-left:6px solid var(--orange);max-height:46vh;overflow:auto}.code .event{color:#906500;font-weight:800}.code .motion{color:#2871c9}.code .control{color:#b86600}.code .variable{color:#bf6500}.slide h2{font-size:clamp(27px,3.1vw,44px)}.slide{gap:10px}.sub{margin-bottom:12px}.card p{color:#526277}.demo{max-width:480px}.demo canvas{width:100%;height:auto}.gamebuttons{display:flex;gap:8px;justify-content:center;margin-top:8px}.gamebuttons button,.action{border:0;background:var(--blue);color:white;border-radius:10px;padding:10px 20px;font:inherit;cursor:pointer;touch-action:none}.checklist label{cursor:pointer}.checklist li::before{content:none}.checklist li{padding-left:20px}.checklist input{width:20px;height:20px;accent-color:var(--green);margin-right:12px}.badge{font-size:15px;color:var(--purple)}.figure svg{width:100%;height:auto}.slide-demo .foot{margin-top:0}.slide-demo .demo{flex-shrink:0} @media print{body{overflow:visible;background:white}.deck{position:static}.slide{position:relative;opacity:1;visibility:visible;transform:none;page-break-after:always;min-height:95vh;padding:24px;overflow:visible}.nav,.counter,.progress,.overlay,.gamebuttons{display:none}.fade-up{opacity:1;transform:none;animation:none}details.hint{display:block}details.hint .inside{display:block}.demo{display:none}}
+</style></head><body><div class="progress" id="progress"></div>
+<div class="counter" id="counter"></div>
+<div class="nav">
+  <button id="prev" title="上一页">‹</button>
+  <button id="next" title="下一页">›</button>
+  <button id="showOverview" class="wide" title="目录 (T)">目录</button>
+  <button id="showNotes" class="wide" title="讲课提示 (N)">提示</button>
+  <button id="fullscreen" class="wide" title="全屏 (F)">全屏</button>
+</div>
+
+<div class="deck" id="deck"><section class="slide active center "><div class="chapter"><span class="cn">启航</span>太空保卫战</div><h2 class="section">🚀 太空保卫战</h2><div class="sub">Scratch 启发式课件 · 10 岁 · 从《是英雄就下一百层》继续出发</div><div class="pill ask" style="width:100%;max-width:1100px">今天你是游戏设计师：<br>让飞船动起来，让激光飞出去，让陨石消失！</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>先玩，再拆</h3><p>观察现象 → 分配角色任务</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>先试，再提示</h3><p>每次只解决一个小问题</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>先完成，再改造</h3><p>基础版 → Boss 版 → 我的创意</p></div></div><aside class="note" hidden>开场2分钟：先问孩子上次最熟悉哪一段。不要把完成过项目等同于理解了克隆。本课件按4次基础课+1次选修设计，每次45–60分钟。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">教师备课</span>太空保卫战</div><h2 class="section">这五次课，分别完成什么？</h2><div class="sub">每课最后留 5 分钟试玩、讲解和保存</div><table class="cmp"><thead><tr><th>课次</th><th>重点</th><th>可玩成果</th><th>课件范围</th></tr></thead><tbody><tr><td>第1课</td><td>移动与边界</td><td>飞船能左右躲避；单颗陨石下落</td><td>第4–10页</td></tr><tr><td>第2课</td><td>激光克隆</td><td>持续发射；出屏幕回收</td><td>第11–14页</td></tr><tr><td>第3课</td><td>陨石克隆与计分</td><td>随机陨石；击中加1分</td><td>第15–18页</td></tr><tr><td>第4课</td><td>完整游戏流程</td><td>输赢、重新开始、自检</td><td>第19–22页</td></tr><tr><td>第5课 · 选修</td><td>Boss 与创意</td><td>广播切换；血量与护盾</td><td>第23–29页</td></tr></tbody></table><aside class="note" hidden>此页给教师看。基础版需先通过自检再加Boss。第1课如学生很快，可提前进入第2课；如克隆还不熟悉，延长第2课。彩色文字是积木文字对照，不是可粘贴进Scratch的代码。</aside></section>
+<section class="slide center slide-demo"><div class="chapter"><span class="cn">先玩</span>太空保卫战</div><h2 class="section">你能保卫太空吗？</h2><div class="sub">← → / A D 移动 · 按住空格发射 · 击碎 10 颗陨石过关</div><div class="demo"><canvas id="game" width="480" height="360" tabindex="0" aria-label="太空保卫战试玩"></canvas></div><div class="gamebuttons"><button id="restartBtn">重新开始</button><button id="bossMode">试玩 Boss 版</button><button data-hold="left">◀</button><button data-hold="fire">发射</button><button data-hold="right">▶</button></div><div class="foot">基础版：碰到陨石或让陨石落到底部就失败。试玩页按空格发射，按 PageDown 翻页。</div><aside class="note" hidden>试玩5分钟。先玩基础版，观察移动、发射、命中、漏接。Boss版只是展示进阶目标。离开试玩页自动暂停。此页左右键和空格给游戏使用，翻页用底部箭头或PageDown。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">观察</span>太空保卫战</div><h2 class="section">别急着打开 Scratch</h2><div class="sub">先描述看见什么，再猜为什么</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>飞船</h3><p>松开按键后，它会继续移动吗？</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>激光</h3><p>为什么一艘飞船能发出很多束？</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>陨石</h3><p>它们在哪里出现？命中之后谁加分？</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">再玩一次：只观察其中一个问题，然后用一句话回答。</div><aside class="note" hidden>5分钟。接受不同猜想，先记录。不要马上揭示克隆和碰撞。让孩子描述“每隔一会儿出现一束”，把时间间隔说出来。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">拆解</span>太空保卫战</div><h2 class="section">老本领，可以搬到新游戏</h2><div class="sub">对照上一项目，找出能复用的部分</div><table class="cmp"><thead><tr><th>下一百层</th><th>太空保卫战</th><th>可复用的本领</th></tr></thead><tbody><tr><td>英雄左右移动</td><td>飞船左右移动</td><td>按键 + x 坐标</td></tr><tr><td>平台不断出现</td><td>陨石不断出现</td><td>克隆 + 等待</td></tr><tr><td>平台位置不同</td><td>陨石位置不同</td><td>随机数</td></tr><tr><td>下了几层</td><td>击碎几颗</td><td>得分变量</td></tr><tr><td>碰到尖刺失败</td><td>碰到陨石失败</td><td>碰撞 + 条件</td></tr></tbody></table><aside class="note" hidden>3分钟。请学生选一行，指出上次相关脚本在哪里。新游戏不需要重力，陨石先做匀速下落，减少新概念。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">拆解</span>太空保卫战</div><h2 class="section">三个角色，一个舞台</h2><div class="sub">每个角色只负责自己的事情</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>🚀 飞船</h3><p>读按键，左右移动，检查自己是否撞到陨石。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>┃ 激光</h3><p>母体隐藏；按住空格生成克隆；克隆从飞船处出发，向上飞。</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>☄ 陨石</h3><p>母体隐藏；定时生成克隆；克隆下落，检测命中并计分。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">谁最适合判断“陨石被击中了”？先说理由。</div><aside class="note" hidden>5分钟。答案选择陨石检测激光：每颗陨石自行消失并加分，避免同一颗陨石重复加分。基础版使用穿透激光，激光不会在命中时消失，明确这是游戏规则。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">搭台</span>太空保卫战</div><h2 class="section">先搭一个小而清楚的舞台</h2><div class="sub">打开 Scratch，新建项目，删除默认小猫</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>画角色</h3><p>飞船约36×32；激光约8×20；陨石约32×32。造型居中，大小100%。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>选背景</h3><p>深色太空背景；暂时不做滚动星空。</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>建变量</h3><p>“得分”“游戏状态”：都选择“适用于所有角色”。状态0=准备，1=游戏中，2=结束。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">基础规则：击碎 10 颗胜利；撞到或漏掉一颗陨石失败。</div><aside class="note" hidden>5–8分钟。尺寸是造型编辑器中的近似绘图尺寸，不是Scratch大小百分比。确保造型中心放正。老师提前写好中文变量名。状态变量放在第4课引入；前几课可以先按绿旗运行单项脚本。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务1</span>太空保卫战</div><h2 class="section">飞船能动，但别飞出屏幕</h2><div class="sub">先预测：x 增加 5，飞船往哪边走？</div><div class="pill ask" style="width:100%;max-width:1100px">按住右键向右，按住左键向左；松开就停。</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="event">当绿旗被点击</span>
+<span class="motion">移到 x: 0 y: -140</span>
+<span class="control">显示</span>
+<span class="control">重复执行</span>
+<span class="control">  如果 &lt;游戏状态 = 1&gt; 那么</span>
+<span class="control">    如果 &lt;按下 [右移键] ?&gt; 那么</span>
+<span class="motion">      将 x 坐标增加 5</span>
+<span class="control">    如果 &lt;按下 [左移键] ?&gt; 那么</span>
+<span class="motion">      将 x 坐标增加 -5</span>
+<span class="motion">    如果 &lt;x 坐标 &gt; 215&gt; 那么</span>
+<span class="motion">      将 x 坐标设为 215</span>
+<span class="motion">    如果 &lt;x 坐标 &lt; -215&gt; 那么</span>
+<span class="motion">      将 x 坐标设为 -215</span>
+<span class="control">  等待 0.02 秒</span></div></div><p>角色：飞船。单项练习时，舞台先把“游戏状态”设为1。</p></div></details><aside class="note" hidden>动手10分钟。箭头积木用侦测里的“按下…键？”放进重复执行，不用连续按键事件。先只做移动，再加边界。如果尺寸变大，需要缩小边界。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">实验</span>太空保卫战</div><h2 class="section">舞台是一张坐标地图</h2><div class="sub">中央是 0；右边 x 大，左边 x 小；上边 y 大，下边 y 小</div><div class="figure" style="width:100%;max-width:850px;min-height:250px"><svg viewBox="0 0 720 280" role="img" aria-label="Scratch坐标地图"><rect x="100" y="25" width="520" height="220" rx="20" fill="#eef4ff"/><path d="M110 135H610M360 30V240" stroke="#4A90E2" stroke-width="3"/><g fill="#2d3748" font-size="20" text-anchor="middle"><text x="360" y="20">y = 180</text><text x="360" y="272">y = -180</text><text x="70" y="140">-240</text><text x="665" y="140">240</text><text x="390" y="125">0</text><text x="360" y="220">🚀 y = -140</text><text x="520" y="70">☄ y = 155</text></g></svg></div><div class="pill ask" style="width:100%;max-width:1100px">把飞船速度从 5 改成 2，再改成 8：哪个更容易瞄准？</div><aside class="note" hidden>5分钟。先让孩子用手指表示正负方向，再试数字。Scratch舞台480×360。边界留余量是因为角色有宽度。讨论速度大并不一定更好玩。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务2</span>太空保卫战</div><h2 class="section">先让一颗陨石下落</h2><div class="sub">先做单颗，再考虑源源不断</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="event">当绿旗被点击</span>
+<span class="motion">移到 x: 80 y: 155</span>
+<span class="control">显示</span>
+<span class="motion">重复执行直到 &lt;y 坐标 &lt; -155&gt;</span>
+<span class="motion">  将 y 坐标增加 -3</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control">隐藏</span></div></div><p>这是单颗实验脚本。第3课做克隆版本时，删除它，换成陨石母体与克隆脚本。</p></div></details><div class="pill ask" style="width:100%;max-width:1100px">预测：把 -3 改成 3，会发生什么？再运行验证。</div><aside class="note" hidden>10分钟。移动方向是本页重点，暂时不加碰撞。学生完成后尝试改变初始x。让飞船躲这颗陨石，形成第1课可玩的成果。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务3</span>太空保卫战</div><h2 class="section">一束激光，怎么一直向上？</h2><div class="sub">先画一道亮光，再让它移动</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="event">当绿旗被点击</span>
+<span class="motion">移到 [飞船]</span>
+<span class="motion">将 y 坐标增加 26</span>
+<span class="control">显示</span>
+<span class="motion">重复执行直到 &lt;y 坐标 &gt; 165&gt;</span>
+<span class="motion">  将 y 坐标增加 6</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control">隐藏</span></div></div><p>这是单束实验脚本。下一页换成克隆版本时，删除它。</p></div></details><div class="pill ask" style="width:100%;max-width:1100px">为什么从“飞船的位置”出发，而不是固定 x = 0？</div><aside class="note" hidden>第2课开场5–8分钟。用飞船挪到左边再运行。激光y增加26，放在机头上方；需按自己绘制的造型调整。不要把实验和正式脚本同时保留。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">原理</span>太空保卫战</div><h2 class="section">克隆：留一个模板，派出很多分身</h2><div class="sub">模板负责“制造”，分身负责“行动”</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>母体</h3><p>隐藏在后台；重复等待按键、克隆自己。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>克隆体</h3><p>出生时显示；移动到机头；向上飞。</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>回收</h3><p>飞到舞台上方，就删除此克隆体。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">如果只“隐藏”激光，分身真的离开了吗？</div><aside class="note" hidden>5分钟。用一张模板卡和几张复制卡演示。隐藏只是看不见，删除才回收。绿旗脚本只由原角色启动，克隆启动脚本由新克隆启动。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务4</span>太空保卫战</div><h2 class="section">按住空格，连续发射</h2><div class="sub">先猜：如果没有等待，激光会有多密？</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">激光 · 母体</span>
+<span class="event">当绿旗被点击</span>
+<span class="control">隐藏</span>
+<span class="control">重复执行</span>
+<span class="control">  如果 &lt;&lt;游戏状态 = 1&gt; 且 &lt;按下 [空格] 键 ?&gt;&gt; 那么</span>
+<span class="control">    克隆 [自己]</span>
+<span class="control">    等待 0.25 秒</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control"></span>
+<span class="control">激光 · 克隆体</span>
+<span class="event">当作为克隆体启动时</span>
+<span class="motion">移到 [飞船]</span>
+<span class="motion">将 y 坐标增加 26</span>
+<span class="control">显示</span>
+<span class="motion">重复执行直到 &lt;&lt;y 坐标 &gt; 165&gt; 或 &lt;游戏状态 ≠ 1&gt;&gt;</span>
+<span class="motion">  将 y 坐标增加 6</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control">删除此克隆体</span></div></div><p>“≠ 1”在 Scratch 中搭成“不成立（游戏状态 = 1）”。激光采用穿透规则，命中后继续飞。</p></div></details><aside class="note" hidden>动手15分钟。母体隐藏后克隆也隐藏，需要在克隆脚本显示。按住空格每0.25秒一束。保留循环末尾0.02秒等待，避免空转。新增脚本时删除上一页单束实验。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">验收</span>太空保卫战</div><h2 class="section">发射器检查站</h2><div class="sub">这一关只验激光，不急着加敌人</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>跟随</h3><p>飞船挪到左边，激光是否从左边发出？</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>节奏</h3><p>改成0.5秒：激光是不是更稀疏？</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>回收</h3><p>连续发射30秒，激光是否及时离开？</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">挑战：让激光变宽一点，还是变快一点？一次只改一个参数。</div><aside class="note" hidden>第2课收尾8分钟，展示5分钟。检查克隆母体隐藏和回收。Scratch克隆数有上限，所以回收不能省略。慢的孩子仅完成稳定连续发射。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务5</span>太空保卫战</div><h2 class="section">陨石制造机：每次位置不同</h2><div class="sub">把单颗陨石脚本换成“母体 + 克隆体”</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">陨石 · 母体</span>
+<span class="event">当绿旗被点击</span>
+<span class="control">隐藏</span>
+<span class="control">重复执行</span>
+<span class="control">  如果 &lt;游戏状态 = 1&gt; 那么</span>
+<span class="control">    克隆 [自己]</span>
+<span class="control">    等待 1 秒</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control"></span>
+<span class="control">陨石 · 克隆体（先做下落）</span>
+<span class="event">当作为克隆体启动时</span>
+<span class="motion">移到 x: (在 -205 到 205 之间取随机数) y: 155</span>
+<span class="control">显示</span>
+<span class="motion">重复执行直到 &lt;&lt;y 坐标 &lt; -155&gt; 或 &lt;游戏状态 ≠ 1&gt;&gt;</span>
+<span class="motion">  将 y 坐标增加 -3</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control">删除此克隆体</span></div></div><p>角色：陨石。先验证随机下落；下一页把“重复执行直到”整段换成带碰撞的版本。</p></div></details><aside class="note" hidden>第3课动手12分钟。随机坐标放克隆启动里。删除旧的单颗脚本。此时游戏状态由舞台设1。1秒一个作为入门参数，可先调成1.5秒。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务6</span>太空保卫战</div><h2 class="section">命中了，谁负责加分？</h2><div class="sub">规则：一颗陨石只值 1 分；激光可以穿透</div><div class="pill ask" style="width:100%;max-width:1100px">让陨石检测激光，命中 → 得分 +1 → 删除自己。</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">陨石 · 替换上一页克隆体脚本</span>
+<span class="event">当作为克隆体启动时</span>
+<span class="motion">移到 x: (在 -205 到 205 之间取随机数) y: 155</span>
+<span class="control">显示</span>
+<span class="control">重复执行直到 &lt;游戏状态 ≠ 1&gt;</span>
+<span class="motion">  将 y 坐标增加 -3</span>
+<span class="control">  如果 &lt;碰到 [激光] ?&gt; 那么</span>
+<span class="variable">    将 [得分] 增加 1</span>
+<span class="control">    删除此克隆体</span>
+<span class="motion">  如果 &lt;y 坐标 &lt; -155&gt; 那么</span>
+<span class="control">    广播 [失败]</span>
+<span class="control">    删除此克隆体</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control">删除此克隆体</span></div></div><p>“碰到激光？”可检测激光角色的克隆。删除自己后，当前克隆的脚本也结束，不会持续加分。</p></div></details><aside class="note" hidden>动手15分钟。碰撞判断写在陨石，激光保持飞行。基础版是穿透激光，不演示“击中后立即删除激光”，避免双方同时检测导致漏判。漏掉陨石的失败广播在第4课接收，当前可先观察它被回收。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">小实验</span>太空保卫战</div><h2 class="section">一次命中，为什么只加一分？</h2><div class="sub">运行前先猜，运行后用证据说明</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>观察</h3><p>在舞台显示“得分”；命中一颗，看变化。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>解释</h3><p>命中后陨石删除了，下一轮还能再加吗？</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>迁移</h3><p>下百层的平台不能立刻删除；它为什么需要“已计分”标记？</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">我的解释：因为 ______，所以同一颗陨石只加一次分。</div><aside class="note" hidden>5分钟。对照上次平台留在舞台上继续移动，所以需要标记；本项目直接删除陨石，无需再建已计分。不要为了形式相似引入多余变量。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">Bug 诊所</span>太空保卫战</div><h2 class="section">看到症状，先找负责的角色</h2><div class="sub">先预测问题位置，再打开锦囊</div><div class="grid two"><div class="card" style="border-top:5px solid var(--blue)"><h3>激光看不见</h3><p>查激光克隆启动：是否显示？是否移到飞船？</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>陨石总在同一列</h3><p>查随机x：是否在克隆启动里重新生成？</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>得分没变化</h3><p>查碰撞：陨石是否检测激光？造型是否太小或速度太大？</p></div><div class="card" style="border-top:5px solid var(--purple)"><h3>越玩越卡</h3><p>查激光和陨石：有没有删除出屏幕的克隆？</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">调试办法：把速度减小，观察一次完整过程。</div><aside class="note" hidden>第3课收尾10分钟。先问学生“你猜是哪一个角色”。激光速度6、陨石速度3，配合较厚造型减少穿过现象；自改高速时需重新试玩。第4课前保存项目版本。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务7</span>太空保卫战</div><h2 class="section">撞到飞船，要通知全场</h2><div class="sub">用广播把“发现失败”与“结束游戏”连接起来</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">飞船 · 新加一条脚本</span>
+<span class="event">当绿旗被点击</span>
+<span class="control">重复执行</span>
+<span class="control">  如果 &lt;&lt;游戏状态 = 1&gt; 且 &lt;碰到 [陨石] ?&gt;&gt; 那么</span>
+<span class="control">    广播 [失败]</span>
+<span class="control">  等待 0.02 秒</span></div></div><p>飞船负责发现撞击；舞台接到广播后统一结束，下一页完成。</p></div></details><div class="pill ask" style="width:100%;max-width:1100px">为什么不让每个角色都各自说“游戏结束”？</div><aside class="note" hidden>第4课8分钟。广播像广播站发通知，不是一个变量。失败来源有两个：飞船碰撞、陨石漏掉。舞台统一接收，状态保护防止重复触发。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">任务8</span>太空保卫战</div><h2 class="section">导演登场：开始、胜利、失败</h2><div class="sub">舞台统一设置变量，并处理输赢</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">舞台</span>
+<span class="event">当绿旗被点击</span>
+<span class="variable">将 [游戏状态] 设为 0</span>
+<span class="variable">将 [得分] 设为 0</span>
+<span class="control">换成背景 [太空]</span>
+<span class="variable">将 [游戏状态] 设为 1</span>
+<span class="control">重复执行直到 &lt;游戏状态 ≠ 1&gt;</span>
+<span class="control">  如果 &lt;得分 &gt; 9&gt; 那么</span>
+<span class="control">    广播 [胜利]</span>
+<span class="control">  等待 0.02 秒</span>
+<span class="control"></span>
+<span class="event">当接收到 [失败]</span>
+<span class="control">如果 &lt;游戏状态 = 1&gt; 那么</span>
+<span class="variable">  将 [游戏状态] 设为 2</span>
+<span class="control">  换成背景 [失败]</span>
+<span class="control">  停止 [全部]</span>
+<span class="control"></span>
+<span class="event">当接收到 [胜利]</span>
+<span class="control">如果 &lt;游戏状态 = 1&gt; 那么</span>
+<span class="variable">  将 [游戏状态] 设为 2</span>
+<span class="control">  换成背景 [胜利]</span>
+<span class="control">  停止 [全部]</span></div></div><p>先创建“太空”“胜利”“失败”三个背景，后两张写上结果和“点绿旗再来一次”。</p></div></details><aside class="note" hidden>动手15分钟。输赢互斥，先被处理的结果生效。同一瞬间漏掉与达到10分时，以先处理的事件为准。停止全部后最后画面会冻结；再点绿旗会清理旧克隆，变量重置、飞船归位。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">流程</span>太空保卫战</div><h2 class="section">把游戏说成一个故事</h2><div class="sub">点绿旗 → 准备 → 游戏中 → 结果</div><table class="cmp"><thead><tr><th>阶段</th><th>发生什么</th><th>怎么理解</th></tr></thead><tbody><tr><td>开始前</td><td>状态0；得分清零</td><td>像裁判整理赛场</td></tr><tr><td>游戏中</td><td>状态1；允许移动、发射、生成陨石</td><td>比赛开始</td></tr><tr><td>失败</td><td>撞到或漏掉；状态2；失败背景</td><td>比赛结束</td></tr><tr><td>胜利</td><td>得分达到10；状态2；胜利背景</td><td>挑战完成</td></tr><tr><td>再来一次</td><td>点绿旗；全部重新准备</td><td>重新开局</td></tr></tbody></table><aside class="note" hidden>5分钟。让孩子扮演导演，另一人扮演飞船，口头发送开始和结束指令。强调只有舞台设置初始得分，避免多个角色各自清零。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">验收</span>太空保卫战</div><h2 class="section">基础版通关清单</h2><div class="sub">用测试证明作品能玩</div><ul class="checklist"><li><label><input type="checkbox">飞船能左右移动，松开即停，边界有效</label></li><li><label><input type="checkbox">激光从飞船位置发出，母体隐藏，离开舞台后删除</label></li><li><label><input type="checkbox">陨石随机出现，命中一颗恰好加1分</label></li><li><label><input type="checkbox">碰到陨石会失败，漏掉陨石也会失败</label></li><li><label><input type="checkbox">击碎10颗出现胜利，结束后不能继续操作</label></li><li><label><input type="checkbox">再次点绿旗：得分0、飞船归位、旧克隆清理</label></li></ul><button class="action" data-copy="checklist">📋 复制任务清单</button><aside class="note" hidden>10分钟。至少测试一次失败、一次胜利、结束后按键、连续三次重开。勾选仅作本次课堂记录，刷新不保留。可以降低目标得分暂测胜利，测完改回10。基础完成即可作为正式作品。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">选修</span>太空保卫战</div><h2 class="section">Boss 来了：先改导演脚本</h2><div class="sub">基础版验收后，再进入进阶版</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>增加一个角色</h3><p>Boss：约110×50；出场位置 x0、y115；使用独立角色，不克隆。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>增加两个变量</h3><p>“Boss血量”“Boss已登场”：都适用于所有角色。</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>改变过关条件</h3><p>击碎10颗 → Boss登场；Boss血量降到0 → 胜利。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">只增加 Boss 一个机制，暂时不加敌方子弹。</div><aside class="note" hidden>第5课准备5分钟。新增变量和广播“Boss登场”。Boss左右移动，激光可击中。Boss抵达前生成陨石，登场后清理陨石，飞船不再有失败威胁；这是演示Boss血量的简化设计，敌方攻击留作后续课程。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">选修任务9</span>太空保卫战</div><h2 class="section">广播一次，让 Boss 接班</h2><div class="sub">把舞台的绿旗脚本替换成这一段</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">舞台 · 替换绿旗脚本（保留胜利/失败接收脚本）</span>
+<span class="event">当绿旗被点击</span>
+<span class="variable">将 [游戏状态] 设为 0</span>
+<span class="variable">将 [得分] 设为 0</span>
+<span class="variable">将 [Boss已登场] 设为 0</span>
+<span class="variable">将 [Boss血量] 设为 8</span>
+<span class="control">换成背景 [太空]</span>
+<span class="variable">将 [游戏状态] 设为 1</span>
+<span class="control">重复执行直到 &lt;游戏状态 ≠ 1&gt;</span>
+<span class="control">  如果 &lt;&lt;得分 &gt; 9&gt; 且 &lt;Boss已登场 = 0&gt;&gt; 那么</span>
+<span class="variable">    将 [Boss已登场] 设为 1</span>
+<span class="control">    广播 [Boss登场]</span>
+<span class="control">  等待 0.02 秒</span></div></div><p>先把“Boss已登场”设1，再广播，避免每一轮都反复通知。</p></div></details><aside class="note" hidden>8分钟。必须替换基础版得分10胜利的脚本，否则Boss刚登场游戏就结束。保留舞台胜利、失败接收脚本。Boss血量只在舞台初始化。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">选修任务10</span>太空保卫战</div><h2 class="section">Boss 登场，陨石退场</h2><div class="sub">修改陨石，飞船与激光脚本继续复用</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">陨石 · 母体生成条件改成</span>
+<span class="control">如果 &lt;&lt;游戏状态 = 1&gt; 且 &lt;Boss已登场 = 0&gt;&gt; 那么</span>
+<span class="control">  克隆 [自己]</span>
+<span class="control">  等待 1 秒</span>
+<span class="control"></span>
+<span class="variable">陨石 · 克隆下落循环最上面增加</span>
+<span class="control">如果 &lt;Boss已登场 = 1&gt; 那么</span>
+<span class="control">  删除此克隆体</span>
+<span class="control"></span>
+<span class="variable">陨石 · 再增加一条脚本</span>
+<span class="event">当接收到 [Boss登场]</span>
+<span class="control">删除此克隆体</span></div></div><p>“删除此克隆体”对母体不起作用；母体仍隐藏并等候。循环内检查可清理刚好在广播时出生的克隆。</p></div></details><aside class="note" hidden>7分钟。在下落循环最开始删除，避免Boss阶段再因漏掉陨石失败。母体等待间隔结束后重新检查条件，因此不会继续生产。提醒这是修改原脚本，不是再复制一整套。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">选修任务11</span>太空保卫战</div><h2 class="section">Boss 左右巡逻</h2><div class="sub">先做出场与移动，再加血量</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">Boss</span>
+<span class="event">当绿旗被点击</span>
+<span class="control">隐藏</span>
+<span class="control"></span>
+<span class="event">当接收到 [Boss登场]</span>
+<span class="motion">移到 x: -160 y: 115</span>
+<span class="control">显示</span>
+<span class="control">重复执行直到 &lt;游戏状态 ≠ 1&gt;</span>
+<span class="motion">  重复执行直到 &lt;&lt;x 坐标 &gt; 159&gt; 或 &lt;游戏状态 ≠ 1&gt;&gt;</span>
+<span class="motion">    将 x 坐标增加 2</span>
+<span class="control">    等待 0.02 秒</span>
+<span class="motion">  重复执行直到 &lt;&lt;x 坐标 &lt; -159&gt; 或 &lt;游戏状态 ≠ 1&gt;&gt;</span>
+<span class="motion">    将 x 坐标增加 -2</span>
+<span class="control">    等待 0.02 秒</span></div></div><p>这里第一次引入嵌套循环：外圈是往返巡逻，内圈是走完一个方向。</p></div></details><aside class="note" hidden>8分钟。嵌套循环只在选修出现。让孩子沿黑板走到右边再走回左边，理解外圈重复。如果仍吃力，Boss先固定在x0、y115，省略巡逻也能完成血量机制。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">选修任务12</span>太空保卫战</div><h2 class="section">血量是一张倒计时账单</h2><div class="sub">Boss 短暂护盾：每 0.3 秒最多受伤一次</div><details class="hint"><summary>🧰 先试一试，卡住再打开锦囊</summary><div class="inside"><div class="sbpanel"><div class="title">Scratch 积木文字对照 · 缩进表示放在里面</div><div class="code"><span class="control">Boss · 新加一条脚本</span>
+<span class="event">当接收到 [Boss登场]</span>
+<span class="control">重复执行直到 &lt;游戏状态 ≠ 1&gt;</span>
+<span class="control">  如果 &lt;碰到 [激光] ?&gt; 那么</span>
+<span class="variable">    将 [Boss血量] 增加 -1</span>
+<span class="control">    如果 &lt;Boss血量 &lt; 1&gt; 那么</span>
+<span class="control">      隐藏</span>
+<span class="control">      广播 [胜利]</span>
+<span class="control">      停止 [这个脚本]</span>
+<span class="control">    等待 0.3 秒</span>
+<span class="control">  等待 0.02 秒</span></div></div><p>显示“Boss血量”变量；这是按受伤间隔扣血，并非“一束激光严格扣一滴血”。穿透激光继续飞行。</p></div></details><aside class="note" hidden>10分钟。多个激光重叠时，同一时刻仍只扣1点。0.3秒是受伤冷却，孩子可以比较0.1和0.8的效果。扣血和移动分两个脚本，等待护盾不会停止移动。不使用命中激光删除，以保持碰撞方案一致。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">创意</span>太空保卫战</div><h2 class="section">只选一项，把它变成你的游戏</h2><div class="sub">改造前写下预期，改造后用试玩验证</div><div class="grid two"><div class="card" style="border-top:5px solid var(--blue)"><h3>🎨 换一个世界</h3><p>海底潜艇发气泡、森林精灵发光球，都能复用规则。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>⚖ 调整难度</h3><p>陨石间隔1 → 1.3秒：是否更适合新玩家？</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>🔊 加音效</h3><p>在陨石命中时“播放声音”，然后删除；避免使用等待播放完导致重复加分。</p></div><div class="card" style="border-top:5px solid var(--purple)"><h3>🧠 新规则</h3><p>漏掉3颗才失败：需要新增“漏掉数”，并修改结束条件。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">我准备改 ______；我预测 ______；试玩后发现 ______。</div><aside class="note" hidden>拓展可留到课后。音效使用不等待的播放声音；克隆删除后声音效果需实测。新增漏掉数要适用于所有角色，舞台清零、漏掉时加1，超过2才广播失败。不要一次改多个参数。</aside></section>
+<section class="slide center "><div class="chapter"><span class="cn">展示</span>太空保卫战</div><h2 class="section">把作品讲给下一位玩家</h2><div class="sub">展示 1 分钟：玩法、原理、一次修复</div><div class="grid three"><div class="card" style="border-top:5px solid var(--blue)"><h3>会拆解 · 1星</h3><p>能说明飞船、激光、陨石各做什么。</p></div><div class="card" style="border-top:5px solid var(--teal)"><h3>懂原理 · 1星</h3><p>能解释克隆为什么要回收、分数为什么只加一次。</p></div><div class="card" style="border-top:5px solid var(--orange)"><h3>会改造 · 1星</h3><p>能展示自己改过的地方，以及试玩证据。</p></div></div><div class="pill ask" style="width:100%;max-width:1100px">今天带走：大游戏可以拆成小任务；遇到 Bug，先找负责的角色。</div><div class="foot">保存 Scratch 项目：文件 → 保存到电脑。基础版与 Boss 版分别保存，便于回看。</div><aside class="note" hidden>最后5分钟。老师不按画面华丽程度评价。学生讲一次自己修复的bug；未完成Boss不扣基础版成果。课后让家长玩一遍，收集一个反馈。</aside></section></div><div id="notes" class="overlay" hidden><div class="nt" id="noteText"></div></div>
+<div id="overview" class="overlay" hidden></div>
+<div id="copyDialog" hidden><h3>请手动复制下面的文字</h3><textarea id="copyText" aria-label="待复制文字"></textarea><button id="closeCopy">完成</button></div>
+<div id="toast" hidden></div>
+
+<p id="checklist" hidden>《太空保卫战》基础版任务清单
+1. 飞船能左右移动，松开即停，边界有效
+2. 激光从飞船位置发出，母体隐藏，离开舞台后删除
+3. 陨石随机出现，命中一颗恰好加1分
+4. 碰到陨石会失败，漏掉陨石也会失败
+5. 击碎10颗出现胜利，结束后不能继续操作
+6. 再次点绿旗：得分0、飞船归位、旧克隆清理
+
+规则：穿透激光；击碎10颗胜利；撞到或漏掉一颗失败。
+重开：点绿旗。
+选修：10分进入Boss；8点血量；0.3秒受伤冷却。
+快捷键：左右/空格翻页，N提示，T目录，F全屏。试玩页左右移动、空格发射，PageDown翻页。</p><script>
+(function(){
+  'use strict';
+  const slides = [...document.querySelectorAll('.slide')];
+  const total = slides.length;
+  let cur = 0;
+  const byId = id => document.getElementById(id);
+  const prog = byId('progress'), ctr = byId('counter');
+  function show(i){
+    cur = Math.max(0, Math.min(total-1, i));
+    slides.forEach((s,idx)=>{ s.classList.remove('active','prev'); if(idx===cur) s.classList.add('active'); else if(idx<cur) s.classList.add('prev'); });
+    prog.style.width = ((cur+1)/total*100)+'%';
+    ctr.textContent = (cur+1)+' / '+total;
+    window.__demo = slides[cur].classList.contains('slide-demo');
+    const note = slides[cur].querySelector('.note');
+    byId('noteText').innerHTML = note ? note.textContent.trim() : '（本页无讲课提示）';
+    const a = document.querySelector('.slide.active'); if(a) a.scrollTop = 0;
+  }
+  function go(n){ show(n); }
+  document.getElementById('prev').onclick = ()=>go(cur-1);
+  document.getElementById('next').onclick = ()=>go(cur+1);
+  byId('showOverview').onclick = ()=>{ byId('overview').hidden = !byId('overview').hidden; byId('notes').hidden = true; };
+  byId('showNotes').onclick = ()=>{ byId('notes').hidden = !byId('notes').hidden; byId('overview').hidden = true; };
+  byId('fullscreen').onclick = async ()=>{ try{ document.fullscreenElement ? await document.exitFullscreen() : await document.documentElement.requestFullscreen(); }catch(e){} };
+  byId('closeCopy').onclick = ()=> byId('copyDialog').hidden = true;
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){ byId('overview').hidden = true; byId('notes').hidden = true; byId('copyDialog').hidden = true; return; }
+    if(!byId('copyDialog').hidden) return;
+    if(/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)) return;
+    if(window.__demo && (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))){ e.preventDefault(); return; }
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); go(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); go(cur-1); }
+    else if(e.key==='Home') go(0);
+    else if(e.key==='End') go(total-1);
+    else if(e.key.toLowerCase()==='f'){ try{ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }catch(_){} }
+    else if(e.key.toLowerCase()==='n'){ byId('notes').hidden = !byId('notes').hidden; byId('overview').hidden = true; }
+    else if(e.key.toLowerCase()==='t'){ byId('overview').hidden = !byId('overview').hidden; byId('notes').hidden = true; }
+  });
+  let sx=0;
+  document.addEventListener('touchstart', e=>sx=e.touches[0].clientX);
+  document.addEventListener('touchend', e=>{ if(window.__demo || e.target.closest('button,details,input')) return; const dx=e.changedTouches[0].clientX-sx; if(dx<-50) go(cur+1); else if(dx>50) go(cur-1); });
+
+  slides.forEach((s,i)=>{
+    const b = document.createElement('button');
+    const sm = document.createElement('small');
+    sm.textContent = '第 '+(i+1)+' 页';
+    const title = s.querySelector('h2.section') || s.querySelector('h1');
+    b.append(sm, document.createTextNode(title ? title.textContent.trim() : ('页面 '+(i+1))));
+    b.onclick = ()=>{ go(i); byId('overview').hidden = true; };
+    byId('overview').append(b);
+  });
+
+  let toastTimer;
+  function toast(msg){ clearTimeout(toastTimer); byId('toast').textContent = msg; byId('toast').hidden = false; toastTimer = setTimeout(()=>{ byId('toast').hidden = true; }, 2600); }
+  async function copy(text){
+    try{
+      if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('no clipboard');
+      await navigator.clipboard.writeText(text); toast('已复制。');
+    }catch(_){ byId('copyText').value = text; byId('copyDialog').hidden = false; byId('copyText').focus(); byId('copyText').select(); }
+  }
+  document.querySelectorAll('[data-copy]').forEach(b=>{ b.onclick = ()=> copy(byId(b.dataset.copy).textContent.trim()); });
+  window.CourseUI = Object.freeze({ copy, go });
+
+  show(0);
+})();
+</script><script>
+(()=>{'use strict';const c=document.getElementById('game'),x=c.getContext('2d'),W=480,H=360;let ship,shots,rocks,score,ended,result,spawn,fire,boss,mode=false,last=0;const keys={},held={};
+function reset(b=mode){mode=b;ship={x:240,y:320};shots=[];rocks=[];score=0;ended=false;result='';spawn=0;fire=0;boss=null;Object.keys(keys).forEach(k=>keys[k]=false);Object.keys(held).forEach(k=>held[k]=false);draw()}
+function end(t){ended=true;result=t}
+function tick(dt){if(ended)return;ship.x=Math.max(25,Math.min(455,ship.x+((keys.ArrowRight||keys.d||held.right?1:0)-(keys.ArrowLeft||keys.a||held.left?1:0))*250*dt));fire-=dt;spawn-=dt;if((keys[' ']||held.fire)&&fire<=0){shots.push({x:ship.x,y:ship.y-26});fire=.25}for(const s of shots)s.y-=300*dt;shots=shots.filter(s=>s.y>-16);if(!boss){if(spawn<=0){rocks.push({x:35+Math.random()*410,y:25});spawn=1}for(let i=rocks.length-1;i>=0;i--){const r=rocks[i];r.y+=150*dt;if(shots.some(s=>Math.abs(s.x-r.x)<20&&Math.abs(s.y-r.y)<24)){rocks.splice(i,1);score++;continue}if(Math.abs(ship.x-r.x)<30&&Math.abs(ship.y-r.y)<29){end('飞船被击中');break}if(r.y>335){end('漏掉一颗陨石');break}}if(!ended&&score>=10){if(mode){rocks=[];boss={x:80,y:65,hp:8,v:100,cool:0}}else end('胜利！太空守护者')}}else{boss.x+=boss.v*dt;if(boss.x>400){boss.x=400;boss.v=-100}if(boss.x<80){boss.x=80;boss.v=100}boss.cool-=dt;if(boss.cool<=0&&shots.some(s=>Math.abs(s.x-boss.x)<59&&Math.abs(s.y-boss.y)<32)){boss.hp--;boss.cool=.3;if(boss.hp<=0)end('胜利！Boss 已击败')}}}
+function draw(){x.fillStyle='#142238';x.fillRect(0,0,W,H);x.fillStyle='#607ca8';for(let i=0;i<45;i++)x.fillRect((i*137)%480,(i*73)%360,2,2);x.fillStyle='#66e9ff';shots.forEach(s=>x.fillRect(s.x-4,s.y-10,8,20));rocks.forEach(r=>{x.fillStyle='#ffaa58';x.beginPath();x.arc(r.x,r.y,16,0,Math.PI*2);x.fill();x.fillStyle='#b97634';x.beginPath();x.arc(r.x-4,r.y-3,5,0,Math.PI*2);x.fill()});x.fillStyle='#6fb1f7';x.beginPath();x.moveTo(ship.x,ship.y-18);x.lineTo(ship.x+18,ship.y+14);x.lineTo(ship.x,ship.y+6);x.lineTo(ship.x-18,ship.y+14);x.closePath();x.fill();if(boss){x.fillStyle=boss.cool>0?'#ffdc89':'#af89f4';x.fillRect(boss.x-55,boss.y-25,110,50);x.fillStyle='white';x.fillRect(boss.x-30,boss.y-6,12,10);x.fillRect(boss.x+18,boss.y-6,12,10)}x.fillStyle='white';x.font='16px sans-serif';x.textAlign='left';x.fillText('得分 '+score+' / 10',14,23);x.textAlign='right';x.fillText(boss?'Boss 血量 '+boss.hp:(mode?'Boss 版':'基础版'),466,23);if(ended){x.fillStyle='rgba(8,16,30,.8)';x.fillRect(0,0,W,H);x.fillStyle='#ffdc89';x.textAlign='center';x.font='bold 26px sans-serif';x.fillText(result,240,168);x.font='16px sans-serif';x.fillText('得分 '+score+' · 点重新开始',240,205)}}
+window.addEventListener('keydown',e=>{if(!window.__demo)return;if(['ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();keys[e.key.toLowerCase().startsWith('arrow')?e.key:e.key.toLowerCase()]=true});window.addEventListener('keyup',e=>{keys[e.key]=false;keys[e.key.toLowerCase()]=false});window.addEventListener('blur',()=>{Object.keys(keys).forEach(k=>keys[k]=false);Object.keys(held).forEach(k=>held[k]=false)});document.querySelectorAll('[data-hold]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();held[b.dataset.hold]=true;b.setPointerCapture(e.pointerId)};b.onpointerup=b.onpointercancel=()=>held[b.dataset.hold]=false});document.getElementById('restartBtn').onclick=()=>reset();document.getElementById('bossMode').onclick=()=>{reset(!mode);document.getElementById('bossMode').textContent=mode?'切回基础版':'试玩 Boss 版'};let active=false;function loop(t){const dt=Math.min((t-last)/1000,.035);last=t;if(window.__demo){if(!active){Object.keys(keys).forEach(k=>keys[k]=false)}tick(dt);draw()}else{Object.keys(keys).forEach(k=>keys[k]=false);Object.keys(held).forEach(k=>held[k]=false)}active=window.__demo;requestAnimationFrame(loop)}reset(false);requestAnimationFrame(loop);
+})();</script></body></html>
